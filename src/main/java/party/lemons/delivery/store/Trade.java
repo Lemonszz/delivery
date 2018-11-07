@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * Created by Sam on 7/11/2018.
@@ -76,5 +77,25 @@ public class Trade
         }
 
         return true;
+    }
+
+    public ItemStackHandler getResultAsInventory()
+    {
+        ItemStackHandler handler = new ItemStackHandler(1);
+        handler.setStackInSlot(0, result);
+
+        return handler;
+    }
+
+    public ItemStackHandler getCostAsInventory()
+    {
+        ItemStackHandler handler =new ItemStackHandler(cost.length);
+        for(int i = 0; i < handler.getSlots(); i++)
+        {
+            ItemStack stack = cost[i].getMatchingStacks()[0];
+            handler.setStackInSlot(i, stack.copy());
+        }
+
+        return handler;
     }
 }

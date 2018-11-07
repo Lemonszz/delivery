@@ -1,4 +1,4 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -8,11 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
+import party.lemons.delivery.block.tileentity.TileEntityCrate;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -43,7 +46,12 @@ public class BlockStoreCrate extends Block
         if(!worldIn.isRemote)
         {
             TileEntityCrate tileentity = (TileEntityCrate) worldIn.getTileEntity(pos);
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tileentity.getStack().copy());
+            for(int i = 0; i < tileentity.getInventory().getSlots(); i++)
+            {
+                ItemStack stack = tileentity.getInventory().getStackInSlot(i);
+                if(!stack.isEmpty())
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy());
+            }
         }
 
         super.breakBlock(worldIn, pos, state);

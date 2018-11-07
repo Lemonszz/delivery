@@ -1,4 +1,4 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

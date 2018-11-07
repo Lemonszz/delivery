@@ -3,8 +3,8 @@ package party.lemons.delivery.store;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import party.lemons.delivery.store.block.ContainerStore;
-import party.lemons.delivery.store.block.GuiStore;
+import party.lemons.delivery.block.tileentity.ContainerStore;
+import party.lemons.delivery.block.tileentity.GuiStore;
 
 import javax.annotation.Nullable;
 

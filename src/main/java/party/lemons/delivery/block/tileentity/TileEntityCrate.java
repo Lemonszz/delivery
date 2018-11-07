@@ -1,50 +1,47 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.block.tileentity;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
 
 /**
  * Created by Sam on 7/11/2018.
  */
 public class TileEntityCrate extends TileEntity
 {
-    private ItemStack stack = ItemStack.EMPTY;
+    private ItemStackHandler inventory = new ItemStackHandler(4);
 
     public TileEntityCrate()
     {
 
     }
 
-    public ItemStack getStack()
+    public ItemStackHandler getInventory()
     {
-        return stack;
-    }
-
-    public void setStack(@Nonnull ItemStack stack)
-    {
-        this.stack = stack;
+        return inventory;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {
-        stack = new ItemStack(compound.getCompoundTag("item"));
+        if(compound.hasKey("items"))
+        {
+            inventory.deserializeNBT(compound.getCompoundTag("items"));
+        }
         super.readFromNBT(compound);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
-        compound.setTag("item", stack.writeToNBT(new NBTTagCompound()));
+        compound.setTag("items", inventory.serializeNBT());
         return super.writeToNBT(compound);
     }
 
     public NBTTagCompound saveToNbt(NBTTagCompound compound)
     {
-        compound.setTag("item", stack.writeToNBT(new NBTTagCompound()));
+        compound.setTag("items", inventory.serializeNBT());
         return compound;
     }
 }

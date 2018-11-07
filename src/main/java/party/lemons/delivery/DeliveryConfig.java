@@ -15,7 +15,7 @@ import party.lemons.delivery.store.DeliveryType;
 public class DeliveryConfig
 {
     @Config.Name("Use Keybinding")
-    @Config.Comment("If this is true, the player can use the store keybinding to open the GUI. If it is false, the store block is required.")
+    @Config.Comment("If this is true, the player can use the store keybinding to open the GUI. If it is false, the store inventory is required.")
     public static boolean useKey = true;
 
     @Config.Name("Delivery Method")

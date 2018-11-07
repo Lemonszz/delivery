@@ -1,4 +1,4 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;

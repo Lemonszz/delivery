@@ -1,4 +1,4 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.block.tileentity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

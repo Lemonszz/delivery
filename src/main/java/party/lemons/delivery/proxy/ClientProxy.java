@@ -1,13 +1,12 @@
 package party.lemons.delivery.proxy;
 
-import net.minecraft.client.renderer.entity.RenderFallingBlock;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import party.lemons.delivery.Delivery;
-import party.lemons.delivery.store.block.EntityFallingBlockExt;
-import party.lemons.delivery.store.block.RenderFallingBlockExt;
+import party.lemons.delivery.entity.EntityFallingBlockExt;
+import party.lemons.delivery.entity.RenderFallingBlockExt;
 
 /**
  * Created by Sam on 7/11/2018.

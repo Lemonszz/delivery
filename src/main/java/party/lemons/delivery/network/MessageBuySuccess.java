@@ -5,8 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import party.lemons.delivery.DeliveryConfig;
-import party.lemons.delivery.store.block.GuiStore;
+import party.lemons.delivery.block.tileentity.GuiStore;
 
 /**
  * Created by Sam on 7/11/2018.

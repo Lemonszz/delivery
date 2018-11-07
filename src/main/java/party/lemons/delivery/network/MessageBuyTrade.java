@@ -3,9 +3,7 @@ package party.lemons.delivery.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketCustomSound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,7 +12,7 @@ import party.lemons.delivery.Delivery;
 import party.lemons.delivery.DeliveryConfig;
 import party.lemons.delivery.store.Trade;
 import party.lemons.delivery.store.Trades;
-import party.lemons.delivery.store.block.ContainerStore;
+import party.lemons.delivery.block.tileentity.ContainerStore;
 
 /**
  * Created by Sam on 7/11/2018.

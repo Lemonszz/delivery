@@ -1,4 +1,4 @@
-package party.lemons.delivery.store.block;
+package party.lemons.delivery.entity;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReportCategory;
@@ -23,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.datafix.DataFixer;
@@ -36,7 +34,9 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 import party.lemons.delivery.DeliveryConfig;
+import party.lemons.delivery.block.DeliveryBlocks;
 
 public class EntityFallingBlockExt extends Entity
 {
@@ -250,8 +250,13 @@ public class EntityFallingBlockExt extends Entity
                                 {
                                     if (tileEntityData != null)
                                     {
-                                        ItemStack itemStack = new ItemStack(tileEntityData.getCompoundTag("item"));
-                                        this.entityDropItem(itemStack, 0);
+                                        ItemStackHandler handler = new ItemStackHandler(4);
+                                        handler.deserializeNBT(tileEntityData.getCompoundTag("items"));
+
+                                        for(int i = 0; i < handler.getSlots(); i++)
+                                        {
+                                            this.entityDropItem(handler.getStackInSlot(i).copy(), 0);
+                                        }
 
                                     } else
                                         this.entityDropItem(new ItemStack(block, 1, block.damageDropped(this.fallTile)), 0.0F);
@@ -391,8 +396,8 @@ public class EntityFallingBlockExt extends Entity
         if (this.fallTile != null)
         {
             Block block = this.fallTile.getBlock();
-            category.addCrashSection("Immitating block ID", Integer.valueOf(Block.getIdFromBlock(block)));
-            category.addCrashSection("Immitating block data", Integer.valueOf(block.getMetaFromState(this.fallTile)));
+            category.addCrashSection("Immitating inventory ID", Integer.valueOf(Block.getIdFromBlock(block)));
+            category.addCrashSection("Immitating inventory data", Integer.valueOf(block.getMetaFromState(this.fallTile)));
         }
     }
 
