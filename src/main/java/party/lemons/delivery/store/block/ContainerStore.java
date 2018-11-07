@@ -69,7 +69,6 @@ public class ContainerStore extends Container
         return !playerIn.isDead;
     }
 
-
     public static class SlotStoreTrade extends SlotItemHandler
     {
         public SlotStoreTrade(ItemStack display, int xPosition, int yPosition)

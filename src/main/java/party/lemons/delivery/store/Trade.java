@@ -2,6 +2,7 @@ package party.lemons.delivery.store;
 
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fml.common.Loader;
@@ -63,6 +64,7 @@ public class Trade
                 }
             }
         }
+
         player.inventoryContainer.detectAndSendChanges();
     }
 

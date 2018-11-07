@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import party.lemons.delivery.network.MessageBuyTrade;
@@ -13,6 +14,7 @@ import party.lemons.delivery.network.MessageCloseGui;
 import party.lemons.delivery.network.MessageOpenStore;
 import party.lemons.delivery.proxy.IProxy;
 import party.lemons.delivery.store.GuiHandler;
+import party.lemons.delivery.store.block.EntityFallingBlockExt;
 import party.lemons.delivery.store.block.TileEntityCrate;
 
 /**
@@ -23,7 +25,7 @@ public class Delivery
 {
     public static final String MODID = "delivery";
     public static final String NAME = "Delivery";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.2.0";
 
     @Mod.Instance(MODID)
     public static Delivery INSTANCE;
@@ -44,5 +46,7 @@ public class Delivery
 
         GameRegistry.registerTileEntity(TileEntityCrate.class, new ResourceLocation(MODID, "crate"));
         NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
+
+        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "falling_block_ext"), EntityFallingBlockExt.class, "Falling Block Ext", 0, INSTANCE,160, 20, true);
     }
 }

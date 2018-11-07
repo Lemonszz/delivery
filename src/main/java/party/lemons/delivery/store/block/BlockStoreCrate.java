@@ -43,7 +43,7 @@ public class BlockStoreCrate extends Block
         if(!worldIn.isRemote)
         {
             TileEntityCrate tileentity = (TileEntityCrate) worldIn.getTileEntity(pos);
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tileentity.getStack());
+            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tileentity.getStack().copy());
         }
 
         super.breakBlock(worldIn, pos, state);
@@ -53,12 +53,7 @@ public class BlockStoreCrate extends Block
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
         if(!worldIn.isRemote)
-        {
-            TileEntityCrate tileentity = (TileEntityCrate) worldIn.getTileEntity(pos);
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tileentity.getStack());
-        }
-
-        worldIn.destroyBlock(pos, true);
+            worldIn.destroyBlock(pos, true);
         return true;
     }
 

@@ -49,7 +49,17 @@ public class MessageOpenStore implements IMessage
 
             world.addScheduledTask(() ->
             {
-                if(!message.keybind || (message.keybind && DeliveryConfig.useKey))
+                boolean dimOk = true;
+                for(int i = 0; i < DeliveryConfig.dimensionBlacklist.length; i++)
+                {
+                    if(world.provider.getDimension() == DeliveryConfig.dimensionBlacklist[i])
+                    {
+                        dimOk = false;
+                        break;
+                    }
+                }
+
+                if(dimOk && (!message.keybind || (message.keybind && DeliveryConfig.useKey)))
                 {
                     player.openGui(Delivery.INSTANCE, message.page, world, 0, 0, 0);
                 }

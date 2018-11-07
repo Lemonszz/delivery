@@ -41,9 +41,13 @@ public class DeliveryBlocks
     @SubscribeEvent
     public static void onRegisterItem(RegistryEvent.Register<Item> event)
     {
-        ItemBlock ib = new ItemBlock(STORE);
-        ib.setRegistryName(new ResourceLocation(Delivery.MODID, "store"));
+        ItemBlock storeBLock = new ItemBlock(STORE);
+        storeBLock.setRegistryName(new ResourceLocation(Delivery.MODID, "store"));
 
-        event.getRegistry().register(ib);
+        ItemBlock crateBLock = new ItemBlock(CRATE);
+        crateBLock.setRegistryName(new ResourceLocation(Delivery.MODID, "crate"));
+
+        event.getRegistry().register(storeBLock);
+        event.getRegistry().register(crateBLock);
     }
 }

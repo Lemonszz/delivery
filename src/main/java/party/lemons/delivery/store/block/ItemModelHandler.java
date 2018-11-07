@@ -19,5 +19,6 @@ public class ItemModelHandler
     public static void onModelRegistery(ModelRegistryEvent event)
     {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DeliveryBlocks.STORE), 0, new ModelResourceLocation(DeliveryBlocks.STORE.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DeliveryBlocks.CRATE), 0, new ModelResourceLocation(DeliveryBlocks.CRATE.getRegistryName(), "inventory"));
     }
 }

@@ -31,7 +31,7 @@ public class MessageCloseGui implements IMessage
         public IMessage onMessage(final MessageCloseGui message, final MessageContext ctx)
         {
             if(DeliveryConfig.closeGui)
-                Minecraft.getMinecraft().displayGuiScreen(null);
+                Minecraft.getMinecraft().player.closeScreen();
             return null;
         }
     }
