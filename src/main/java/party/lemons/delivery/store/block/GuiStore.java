@@ -117,61 +117,34 @@ public class GuiStore extends GuiContainer
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
-    private static final ResourceLocation BEACON_GUI_TEXTURES = new ResourceLocation("textures/gui/container/beacon.png");
     private static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
     static class Button extends GuiButton
     {
-        private final ResourceLocation iconTexture;
         private final int iconX;
         private final int iconY;
-        private boolean selected;
 
-        protected Button(int buttonId, int x, int y, ResourceLocation iconTextureIn, int iconXIn, int iconYIn)
+        protected Button(int buttonId, int x, int y, int iconXIn, int iconYIn)
         {
             super(buttonId, x, y, 17, 17, "");
-            this.iconTexture = iconTextureIn;
             this.iconX = iconXIn;
             this.iconY = iconYIn;
         }
 
-        /**
-         * Draws this button to the screen.
-         */
         public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
         {
             if (this.visible)
             {
-                mc.getTextureManager().bindTexture(BEACON_GUI_TEXTURES);
+                mc.renderEngine.bindTexture(BG);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-                int i = 219;
-                int j = 0;
-
                 if(this.hovered)
                 {
                     GlStateManager.color(0.258823529F, 0.525490196F, 0.956862745F, 1F);
-
                 }
-                this.drawTexturedModalRect(this.x, this.y, j, 219, this.width, this.height);
+                this.drawTexturedModalRect(this.x, this.y, 0, 167, this.width, this.height);
                 GlStateManager.color(1F, 1F, 1F, 1F);
-
-                if (!BEACON_GUI_TEXTURES.equals(this.iconTexture))
-                {
-                    mc.getTextureManager().bindTexture(this.iconTexture);
-                }
-
-                this.drawTexturedModalRect(this.x, this.y - 1, this.iconX, this.iconY, 18, 18);
+                this.drawTexturedModalRect(this.x - 1, this.y, this.iconX, this.iconY, 17, 17);
             }
-        }
-
-        public boolean isSelected()
-        {
-            return this.selected;
-        }
-
-        public void setSelected(boolean selectedIn)
-        {
-            this.selected = selectedIn;
         }
     }
 
@@ -182,7 +155,7 @@ public class GuiStore extends GuiContainer
 
         public ConfirmButton(int buttonId, int storeIndex, int x, int y)
         {
-            super(buttonId, x, y, BEACON_GUI_TEXTURES, 90, 220);
+            super(buttonId, x, y, 17, 167);
 
             this.storeIndex = storeIndex;
         }
