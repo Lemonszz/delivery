@@ -2,6 +2,7 @@ package party.lemons.delivery.store.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +21,9 @@ public class DeliveryBlocks
 {
     public static final Block CRATE = Blocks.AIR;
     public static final Block STORE = Blocks.AIR;
+
+    public static final Item STORE_BOOK = Items.AIR;
+    public static final Item STORE_TECH = Items.AIR;
 
     @SubscribeEvent
     public static void onRegisterBlock(RegistryEvent.Register<Block> event)
@@ -49,5 +53,8 @@ public class DeliveryBlocks
 
         event.getRegistry().register(storeBLock);
         event.getRegistry().register(crateBLock);
+
+        event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_book").setRegistryName(Delivery.MODID, "store_book"));
+        event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_tech").setRegistryName(Delivery.MODID, "store_tech"));
     }
 }

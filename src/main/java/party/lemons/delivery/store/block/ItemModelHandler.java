@@ -20,5 +20,7 @@ public class ItemModelHandler
     {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DeliveryBlocks.STORE), 0, new ModelResourceLocation(DeliveryBlocks.STORE.getRegistryName(), "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DeliveryBlocks.CRATE), 0, new ModelResourceLocation(DeliveryBlocks.CRATE.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(DeliveryBlocks.STORE_BOOK, 0, new ModelResourceLocation(DeliveryBlocks.STORE_BOOK.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(DeliveryBlocks.STORE_TECH, 0, new ModelResourceLocation(DeliveryBlocks.STORE_TECH.getRegistryName(), "inventory"));
     }
 }
