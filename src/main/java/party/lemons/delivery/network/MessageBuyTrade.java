@@ -57,9 +57,16 @@ public class MessageBuyTrade implements IMessage
                 if(player.openContainer instanceof ContainerStore && trade.canPurchase(player))
                 {
                     trade.takeCost(player);
-                    player.closeScreen();
-                    Delivery.NETWORK.sendTo(new MessageCloseGui(), player);
 
+                    if(DeliveryConfig.closeGui)
+                    {
+                        player.closeScreen();
+                        Delivery.NETWORK.sendTo(new MessageCloseGui(), player);
+                    }
+                    else
+                    {
+                        Delivery.NETWORK.sendTo(new MessageBuySuccess(), player);
+                    }
                     DeliveryConfig.deliveryType.doDelivery(trade, player, world, player.getPosition());
 
                     sound = DeliveryConfig.purchaceSuccessSound;

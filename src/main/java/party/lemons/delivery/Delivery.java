@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import party.lemons.delivery.network.MessageBuySuccess;
 import party.lemons.delivery.network.MessageBuyTrade;
 import party.lemons.delivery.network.MessageCloseGui;
 import party.lemons.delivery.network.MessageOpenStore;
@@ -43,6 +44,7 @@ public class Delivery
         NETWORK.registerMessage(MessageOpenStore.Handler.class, MessageOpenStore.class, 0, Side.SERVER);
         NETWORK.registerMessage(MessageBuyTrade.Handler.class, MessageBuyTrade.class, 1, Side.SERVER);
         NETWORK.registerMessage(MessageCloseGui.Handler.class, MessageCloseGui.class, 2, Side.CLIENT);
+        NETWORK.registerMessage(MessageBuySuccess.Handler.class, MessageBuySuccess.class, 3, Side.CLIENT);
 
         GameRegistry.registerTileEntity(TileEntityCrate.class, new ResourceLocation(MODID, "crate"));
         NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());

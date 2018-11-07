@@ -24,7 +24,7 @@ public class DeliveryConfig
 
     @Config.Name("Close GUI after trade")
     @Config.Comment("Should the store GUI close after a successful purchace?")
-    public static boolean closeGui = true;
+    public static boolean closeGui = false;
 
     @Config.Name("Store title")
     @Config.Comment("Title that will be displayed at the top of the store, if no title set will use the default translation")

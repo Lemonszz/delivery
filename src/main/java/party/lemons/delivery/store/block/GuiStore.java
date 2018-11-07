@@ -24,6 +24,7 @@ import java.util.List;
 public class GuiStore extends GuiContainer
 {
     private ContainerStore store;
+    private ConfirmButton lastButton = null;
 
     public GuiStore(ContainerStore store)
     {
@@ -84,6 +85,7 @@ public class GuiStore extends GuiContainer
                 break;
             case 2:
                 Delivery.NETWORK.sendToServer(new MessageBuyTrade(((ConfirmButton)button).storeIndex));
+                lastButton = (ConfirmButton) button;
                 break;
         }
 
@@ -118,10 +120,18 @@ public class GuiStore extends GuiContainer
     }
 
     private static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
+
+    public void setButtonDisabled()
+    {
+        if(lastButton != null)
+        lastButton.setDisabled();
+    }
+
     static class Button extends GuiButton
     {
         private final int iconX;
         private final int iconY;
+        private float disableTime;
 
         protected Button(int buttonId, int x, int y, int iconXIn, int iconYIn)
         {
@@ -141,10 +151,27 @@ public class GuiStore extends GuiContainer
                 {
                     GlStateManager.color(0.258823529F, 0.525490196F, 0.956862745F, 1F);
                 }
+                if(!enabled)
+                {
+                    GlStateManager.color(109F / 255F, 109F / 255F, 109F / 255F, 0.8F);
+                }
+
                 this.drawTexturedModalRect(this.x, this.y, 0, 167, this.width, this.height);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 this.drawTexturedModalRect(this.x - 1, this.y, this.iconX, this.iconY, 17, 17);
             }
+            disableTime -= partialTicks;
+            if(disableTime <= 0)
+            {
+                enabled = true;
+            }
+
+        }
+
+        public void setDisabled()
+        {
+            this.enabled = false;
+            this.disableTime = 15;
         }
     }
 
