@@ -1,5 +1,6 @@
 package party.lemons.delivery.store;
 
+import crafttweaker.api.item.IItemStack;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -7,10 +8,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.ItemStackHandler;
+import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.Arrays;
 
 /**
  * Created by Sam on 7/11/2018.
  */
+@ZenClass
 public class Trade
 {
     public ItemStack result = ItemStack.EMPTY;
@@ -27,6 +33,29 @@ public class Trade
         this.result = result;
         this.cost = cost;
         this.gameStage = gamestage;
+    }
+
+    @ZenMethod
+    public Trade addOre(String dict, int size)
+    {
+        SizedOreIngredient ingredient = new SizedOreIngredient(dict, size);
+        return addIngredient(ingredient);
+    }
+
+    @ZenMethod
+    public Trade addItem(IItemStack... stacks)
+    {
+        return addIngredient(Trades.getMergedIngredient(stacks));
+    }
+
+    @ZenMethod
+    public Trade addIngredient(Ingredient ingredient)
+    {
+        int ind = cost.length;
+        cost = Arrays.copyOf(cost, cost.length + 1);
+        cost[ind] = ingredient;
+
+        return this;
     }
 
     public boolean canPurchase(EntityPlayer player)
