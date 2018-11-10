@@ -54,7 +54,7 @@ public class ContainerStore extends Container
             addSlotToContainer(new SlotStoreTrade(trade.result, 120, 20 + (ind * 20)));
             for (int j = 0; j < trade.cost.length; j++)
             {
-                int xPos = 12 + (j * 20);
+                int xPos = 12 + (j * 19);
 
                 addSlotToContainer(new SlotStoreTradeCost(trade.cost[j], xPos, 20 + (ind * 20), player.getRNG()));
             }
