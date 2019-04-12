@@ -14,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemStackHandler;
 import party.lemons.delivery.block.tileentity.TileEntityCrate;
 
 import javax.annotation.Nullable;
@@ -25,50 +24,49 @@ import java.util.Random;
  */
 public class BlockStoreCrate extends Block
 {
-    public BlockStoreCrate()
-    {
-        super(Material.WOOD, MapColor.ADOBE);
-    }
+	public BlockStoreCrate()
+	{
+		super(Material.WOOD, MapColor.ADOBE);
+	}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state)
-    {
-        return true;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
 
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return Items.AIR;
-    }
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	{
+		return Items.AIR;
+	}
 
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if(!worldIn.isRemote)
-        {
-            TileEntityCrate tileentity = (TileEntityCrate) worldIn.getTileEntity(pos);
-            for(int i = 0; i < tileentity.getInventory().getSlots(); i++)
-            {
-                ItemStack stack = tileentity.getInventory().getStackInSlot(i);
-                if(!stack.isEmpty())
-                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy());
-            }
-        }
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	{
+		if(!worldIn.isRemote)
+		{
+			TileEntityCrate tileentity = (TileEntityCrate) worldIn.getTileEntity(pos);
+			for(int i = 0; i < tileentity.getInventory().getSlots(); i++)
+			{
+				ItemStack stack = tileentity.getInventory().getStackInSlot(i);
+				if(!stack.isEmpty())
+					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy());
+			}
+		}
 
-        super.breakBlock(worldIn, pos, state);
-    }
+		super.breakBlock(worldIn, pos, state);
+	}
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        if(!worldIn.isRemote)
-            worldIn.destroyBlock(pos, true);
-        return true;
-    }
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		if(!worldIn.isRemote) worldIn.destroyBlock(pos, true);
+		return true;
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        return new TileEntityCrate();
-    }
+	@Nullable
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileEntityCrate();
+	}
 }

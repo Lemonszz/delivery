@@ -13,22 +13,22 @@ import party.lemons.delivery.proxy.ClientProxy;
 @Mod.EventBusSubscriber(modid = Delivery.MODID, value = Side.CLIENT)
 public class DeliveryClient
 {
-    @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event)
-    {
-        if(event.phase != TickEvent.Phase.START)
-            return;
+	@SubscribeEvent
+	public static void onPlayerTick(TickEvent.PlayerTickEvent event)
+	{
+		if(event.phase != TickEvent.Phase.START) return;
 
-        if(ClientProxy.KEY_STORE.isPressed())
-        {
-            sendStoreMessage(true);
-        }
-    }
+		if(ClientProxy.KEY_STORE.isPressed())
+		{
+			sendStoreMessage(true);
+		}
+	}
 
-    public static int LAST_PAGE = 0;
+	public static int LAST_PAGE = 0;
+	public static String LAST_STORE = "_store";
 
-    public static void sendStoreMessage(boolean keybind)
-    {
-        Delivery.NETWORK.sendToServer(new MessageOpenStore(LAST_PAGE, keybind));
-    }
+	public static void sendStoreMessage(boolean keybind)
+	{
+		Delivery.NETWORK.sendToServer(new MessageOpenStore(LAST_PAGE, LAST_STORE, keybind));
+	}
 }

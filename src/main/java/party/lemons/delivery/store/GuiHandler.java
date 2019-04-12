@@ -5,6 +5,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import party.lemons.delivery.block.tileentity.ContainerStore;
 import party.lemons.delivery.block.tileentity.GuiStore;
+import party.lemons.delivery.network.MessageOpenStore;
 
 import javax.annotation.Nullable;
 
@@ -13,18 +14,18 @@ import javax.annotation.Nullable;
  */
 public class GuiHandler implements IGuiHandler
 {
-    //yolo
-    @Nullable
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        return new ContainerStore(player, ID);
-    }
+	//yolo
+	@Nullable
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		return new ContainerStore(player, ID, MessageOpenStore.playerStoreMap.get(player.getName()));
+	}
 
-    @Nullable
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        return new GuiStore(new ContainerStore(player, ID));
-    }
+	@Nullable
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		return new GuiStore(new ContainerStore(player, ID, "_store"));
+	}
 }

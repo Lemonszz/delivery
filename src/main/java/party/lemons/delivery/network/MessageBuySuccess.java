@@ -12,33 +12,36 @@ import party.lemons.delivery.block.tileentity.GuiStore;
  */
 public class MessageBuySuccess implements IMessage
 {
-    public MessageBuySuccess(){}
+	public MessageBuySuccess()
+	{
+	}
 
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    public static class Handler implements IMessageHandler<MessageBuySuccess, IMessage>
-    {
-        @Override
-        public IMessage onMessage(final MessageBuySuccess message, final MessageContext ctx)
-        {
-            Minecraft.getMinecraft().addScheduledTask(()->
-            {
-                if(Minecraft.getMinecraft().currentScreen instanceof GuiStore)
-                {
-                    ((GuiStore)Minecraft.getMinecraft().currentScreen).setButtonDisabled();
-                }
-            });
-            return null;
-        }
-    }
+	public static class Handler implements IMessageHandler<MessageBuySuccess, IMessage>
+	{
+		@Override
+		public IMessage onMessage(final MessageBuySuccess message, final MessageContext ctx)
+		{
+			Minecraft.getMinecraft().addScheduledTask(()->
+			{
+				if(Minecraft.getMinecraft().currentScreen instanceof GuiStore)
+				{
+					((GuiStore) Minecraft.getMinecraft().currentScreen).setButtonDisabled();
+				}
+			});
+			return null;
+		}
+	}
 
 }

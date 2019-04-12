@@ -14,16 +14,16 @@ import party.lemons.delivery.DeliveryClient;
  */
 public class ItemStore extends Item
 {
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-    {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+	{
+		ItemStack stack = playerIn.getHeldItem(handIn);
 
-        if(worldIn.isRemote)
-        {
-            DeliveryClient.sendStoreMessage(false);
-        }
+		if(worldIn.isRemote)
+		{
+			DeliveryClient.sendStoreMessage(false);
+		}
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	}
 }

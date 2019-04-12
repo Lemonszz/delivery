@@ -16,20 +16,20 @@ import party.lemons.delivery.DeliveryClient;
  */
 public class BlockStore extends Block
 {
-    public BlockStore()
-    {
-        super(Material.WOOD, MapColor.WOOD);
-    }
+	public BlockStore()
+	{
+		super(Material.WOOD, MapColor.WOOD);
+	}
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        if(worldIn.isRemote)
-        {
-            DeliveryClient.sendStoreMessage(false);
-            return true;
-        }
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		if(worldIn.isRemote)
+		{
+			DeliveryClient.sendStoreMessage(false);
+			return true;
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

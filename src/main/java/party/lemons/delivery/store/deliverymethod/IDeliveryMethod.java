@@ -12,5 +12,5 @@ import javax.annotation.Nonnull;
  */
 public interface IDeliveryMethod
 {
-    void doDelivery(@Nonnull Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos);
+	void doDelivery(@Nonnull Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos);
 }

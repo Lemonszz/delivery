@@ -13,12 +13,12 @@ import party.lemons.delivery.entity.RenderFallingBlockExt;
  */
 public class ClientProxy implements IProxy
 {
-    public static KeyBinding KEY_STORE = new KeyBinding("key." + Delivery.MODID+ ".store", 48, "key.categories.gameplay");
+	public static KeyBinding KEY_STORE = new KeyBinding("key." + Delivery.MODID + ".store", 48, "key.categories.gameplay");
 
-    @Override
-    public void preInitSided(FMLPreInitializationEvent event)
-    {
-        ClientRegistry.registerKeyBinding(KEY_STORE);
-        RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExt.class, RenderFallingBlockExt::new);
-    }
+	@Override
+	public void preInitSided(FMLPreInitializationEvent event)
+	{
+		ClientRegistry.registerKeyBinding(KEY_STORE);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFallingBlockExt.class, RenderFallingBlockExt::new);
+	}
 }

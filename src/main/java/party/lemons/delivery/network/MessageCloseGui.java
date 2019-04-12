@@ -12,28 +12,30 @@ import party.lemons.delivery.DeliveryConfig;
  */
 public class MessageCloseGui implements IMessage
 {
-    public MessageCloseGui(){}
+	public MessageCloseGui()
+	{
+	}
 
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
 
-    }
+	}
 
-    public static class Handler implements IMessageHandler<MessageCloseGui, IMessage>
-    {
-        @Override
-        public IMessage onMessage(final MessageCloseGui message, final MessageContext ctx)
-        {
-            if(DeliveryConfig.closeGui)
-                Minecraft.getMinecraft().player.closeScreen();
-            return null;
-        }
-    }
+	public static class Handler implements IMessageHandler<MessageCloseGui, IMessage>
+	{
+		@Override
+		public IMessage onMessage(final MessageCloseGui message, final MessageContext ctx)
+		{
+			if(DeliveryConfig.closeGui) Minecraft.getMinecraft().player.closeScreen();
+			return null;
+		}
+	}
 
 }

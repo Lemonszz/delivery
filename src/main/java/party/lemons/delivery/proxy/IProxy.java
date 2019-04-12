@@ -7,5 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  */
 public interface IProxy
 {
-    default void preInitSided(FMLPreInitializationEvent event){}
+	default void preInitSided(FMLPreInitializationEvent event)
+	{
+	}
 }

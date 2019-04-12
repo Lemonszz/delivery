@@ -3,69 +3,81 @@ package party.lemons.delivery.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import party.lemons.delivery.Delivery;
 import party.lemons.delivery.DeliveryConfig;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Sam on 7/11/2018.
  */
 public class MessageOpenStore implements IMessage
 {
-    public int page;
-    public boolean keybind;
+	public int page;
+	public boolean keybind;
+	public String store;
 
-    public MessageOpenStore(){}
+	public MessageOpenStore()
+	{
+	}
 
-    public MessageOpenStore(int page, boolean keybind)
-    {
-        this.page = page;
-        this.keybind = keybind;
-    }
+	public MessageOpenStore(int page, String store, boolean keybind)
+	{
+		this.page = page;
+		this.keybind = keybind;
+		this.store = store;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        this.page = buf.readInt();
-        this.keybind = buf.readBoolean();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		this.page = buf.readInt();
+		this.keybind = buf.readBoolean();
+		this.store = ByteBufUtils.readUTF8String(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeInt(page);
-        buf.writeBoolean(keybind);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeInt(page);
+		buf.writeBoolean(keybind);
+		ByteBufUtils.writeUTF8String(buf, store);
+	}
 
-    public static class Handler implements IMessageHandler<MessageOpenStore, IMessage>
-    {
-        @Override
-        public IMessage onMessage(final MessageOpenStore message, final MessageContext ctx)
-        {
-            final EntityPlayerMP player = ctx.getServerHandler().player;
-            final WorldServer world = player.getServerWorld();
+	public static class Handler implements IMessageHandler<MessageOpenStore, IMessage>
+	{
+		@Override
+		public IMessage onMessage(final MessageOpenStore message, final MessageContext ctx)
+		{
+			final EntityPlayerMP player = ctx.getServerHandler().player;
+			final WorldServer world = player.getServerWorld();
 
-            world.addScheduledTask(() ->
-            {
-                boolean dimOk = true;
-                for(int i = 0; i < DeliveryConfig.dimensionBlacklist.length; i++)
-                {
-                    if(world.provider.getDimension() == DeliveryConfig.dimensionBlacklist[i])
-                    {
-                        dimOk = false;
-                        break;
-                    }
-                }
+			world.addScheduledTask(()->
+			{
+				boolean dimOk = true;
+				for(int i = 0; i < DeliveryConfig.dimensionBlacklist.length; i++)
+				{
+					if(world.provider.getDimension() == DeliveryConfig.dimensionBlacklist[i])
+					{
+						dimOk = false;
+						break;
+					}
+				}
 
-                if(dimOk && (!message.keybind || (message.keybind && DeliveryConfig.useKey)))
-                {
-                    player.openGui(Delivery.INSTANCE, message.page, world, 0, 0, 0);
-                }
-            });
-            return null;
-        }
-    }
+				if(dimOk && (!message.keybind || (message.keybind && DeliveryConfig.useKey)))
+				{
+					playerStoreMap.put(player.getName(), message.store);
+					player.openGui(Delivery.INSTANCE, message.page, world, 0, 0, 0);
+				}
+			});
+			return null;
+		}
+	}
 
+	public static Map<String, String> playerStoreMap = new HashMap<>();
 }

@@ -19,9 +19,6 @@
 
 package party.lemons.delivery.store;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -32,106 +29,105 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class SizedOreIngredient extends Ingredient
 {
-    private NonNullList<ItemStack> ores;
-    private IntList itemIds = null;
-    private ItemStack[] array = null;
-    private int lastSizeA = -1, lastSizeL = -1;
-    private int size;
+	private NonNullList<ItemStack> ores;
+	private IntList itemIds = null;
+	private ItemStack[] array = null;
+	private int lastSizeA = -1, lastSizeL = -1;
+	private int size;
 
-    public SizedOreIngredient(String ore, int size)
-    {
-        super(0);
-        ores = OreDictionary.getOres(ore);
-        for(ItemStack stack : ores)
-        {
-            stack.setCount(size);
-        }
-        this.size = size;
-    }
+	public SizedOreIngredient(String ore, int size)
+	{
+		super(0);
+		ores = OreDictionary.getOres(ore);
+		for(ItemStack stack : ores)
+		{
+			stack.setCount(size);
+		}
+		this.size = size;
+	}
 
-    @Override
-    @Nonnull
-    public ItemStack[] getMatchingStacks()
-    {
-        if (array == null || this.lastSizeA != ores.size())
-        {
-            NonNullList<ItemStack> lst = NonNullList.create();
-            for (ItemStack itemstack : this.ores)
-            {
-                if (itemstack.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-                    itemstack.getItem().getSubItems(CreativeTabs.SEARCH, lst);
-                }
-                else
-                    lst.add(itemstack);
-            }
-            for(ItemStack stack : lst)
-            {
-                stack.setCount(size);
-            }
+	@Override
+	@Nonnull
+	public ItemStack[] getMatchingStacks()
+	{
+		if(array == null || this.lastSizeA != ores.size())
+		{
+			NonNullList<ItemStack> lst = NonNullList.create();
+			for(ItemStack itemstack : this.ores)
+			{
+				if(itemstack.getMetadata() == OreDictionary.WILDCARD_VALUE)
+				{
+					itemstack.getItem().getSubItems(CreativeTabs.SEARCH, lst);
+				}else lst.add(itemstack);
+			}
+			for(ItemStack stack : lst)
+			{
+				stack.setCount(size);
+			}
 
-            this.array = lst.toArray(new ItemStack[lst.size()]);
-            this.lastSizeA = ores.size();
-        }
-        return this.array;
-    }
-
-
-    @Override
-    @Nonnull
-    public IntList getValidItemStacksPacked()
-    {
-        if (this.itemIds == null || this.lastSizeL != ores.size())
-        {
-            this.itemIds = new IntArrayList(this.ores.size());
-
-            for (ItemStack itemstack : this.ores)
-            {
-                if (itemstack.getMetadata() == OreDictionary.WILDCARD_VALUE)
-                {
-                    NonNullList<ItemStack> lst = NonNullList.create();
-                    itemstack.getItem().getSubItems(CreativeTabs.SEARCH, lst);
-                    for (ItemStack item : lst)
-                        this.itemIds.add(RecipeItemHelper.pack(item));
-                }
-                else
-                {
-                    this.itemIds.add(RecipeItemHelper.pack(itemstack));
-                }
-            }
-
-            this.itemIds.sort(IntComparators.NATURAL_COMPARATOR);
-            this.lastSizeL = ores.size();
-        }
-
-        return this.itemIds;
-    }
+			this.array = lst.toArray(new ItemStack[lst.size()]);
+			this.lastSizeA = ores.size();
+		}
+		return this.array;
+	}
 
 
-    @Override
-    public boolean apply(@Nullable ItemStack input)
-    {
-        if (input == null)
-            return false;
+	@Override
+	@Nonnull
+	public IntList getValidItemStacksPacked()
+	{
+		if(this.itemIds == null || this.lastSizeL != ores.size())
+		{
+			this.itemIds = new IntArrayList(this.ores.size());
 
-        for (ItemStack target : this.ores)
-            if (OreDictionary.itemMatches(target, input, false))
-                return true;
+			for(ItemStack itemstack : this.ores)
+			{
+				if(itemstack.getMetadata() == OreDictionary.WILDCARD_VALUE)
+				{
+					NonNullList<ItemStack> lst = NonNullList.create();
+					itemstack.getItem().getSubItems(CreativeTabs.SEARCH, lst);
+					for(ItemStack item : lst)
+						this.itemIds.add(RecipeItemHelper.pack(item));
+				}else
+				{
+					this.itemIds.add(RecipeItemHelper.pack(itemstack));
+				}
+			}
 
-        return false;
-    }
+			this.itemIds.sort(IntComparators.NATURAL_COMPARATOR);
+			this.lastSizeL = ores.size();
+		}
 
-    @Override
-    protected void invalidate()
-    {
-        this.itemIds = null;
-        this.array = null;
-    }
+		return this.itemIds;
+	}
 
-    @Override
-    public boolean isSimple()
-    {
-        return true;
-    }
+
+	@Override
+	public boolean apply(@Nullable ItemStack input)
+	{
+		if(input == null) return false;
+
+		for(ItemStack target : this.ores)
+			if(OreDictionary.itemMatches(target, input, false)) return true;
+
+		return false;
+	}
+
+	@Override
+	protected void invalidate()
+	{
+		this.itemIds = null;
+		this.array = null;
+	}
+
+	@Override
+	public boolean isSimple()
+	{
+		return true;
+	}
 }

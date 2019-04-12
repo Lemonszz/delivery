@@ -2,9 +2,12 @@ package party.lemons.delivery.block.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import party.lemons.delivery.DeliveryClient;
@@ -20,113 +23,178 @@ import java.util.Random;
  */
 public class ContainerStore extends Container
 {
-    private static final int PER_PAGE = 6;
+	private static final int PER_PAGE = 6;
 
-    private final EntityPlayer player;
-    public int page = 0;
+	private final EntityPlayer player;
+	private List<Trade> trades;
+	public int page = 0;
+	private String store;
 
-    public ContainerStore(EntityPlayer player, int page)
-    {
-        this.page = page;
-        this.player = player;
+	public ContainerStore(EntityPlayer player, int page, String store)
+	{
+		this.page = page;
+		this.store = store;
+		this.player = player;
 
-        List<Trade> trades = Trades.getTrades(player);
+		trades = Trades.getTrades(player, store);
+		addSlots();
+	}
 
-        if (page * PER_PAGE > trades.size())
-        {
-            page = 0;
-            DeliveryClient.LAST_PAGE = page;
-        }
+	public void addSlots()
+	{
+		this.inventorySlots.clear();
+		this.inventoryItemStacks.clear();
 
-        if (page < 0)
-        {
-            page = trades.size() / PER_PAGE;
-            DeliveryClient.LAST_PAGE = page;
-        }
 
-        int startIndex = page * PER_PAGE;
+		if(page * PER_PAGE > trades.size())
+		{
+			page = 0;
+			DeliveryClient.LAST_PAGE = page;
+		}
 
-        int ind = 0;
-        for (int i = startIndex; i < Math.min(startIndex + PER_PAGE, trades.size()); i++)
-        {
-            Trade trade = trades.get(i);
+		if(page < 0)
+		{
+			page = trades.size() / PER_PAGE;
+			DeliveryClient.LAST_PAGE = page;
+		}
 
-            addSlotToContainer(new SlotStoreTrade(trade.result, 120, 20 + (ind * 20)));
-            for (int j = 0; j < trade.cost.length; j++)
-            {
-                int xPos = 12 + (j * 19);
+		int startIndex = page * PER_PAGE;
 
-                addSlotToContainer(new SlotStoreTradeCost(trade.cost[j], xPos, 20 + (ind * 20), player.getRNG()));
-            }
+		int ind = 0;
+		for(int i = startIndex; i < Math.min(startIndex + PER_PAGE, trades.size()); i++)
+		{
+			Trade trade = trades.get(i);
 
-            ind++;
-        }
-    }
+			addSlotToContainer(new SlotStoreTrade(trade.result, 120, 20 + (ind * 20)));
+			for(int j = 0; j < trade.cost.length; j++)
+			{
+				int xPos = 12 + (j * 19);
+				try
+				{
+					addSlotToContainer(new SlotStoreTradeCost(trade.cost[j], xPos, 20 + (ind * 20), player.getRNG()));
+				}catch(IndexOutOfBoundsException e)
+				{
+					System.out.println("!!!NO ORE DICTIONARY ENTRY FOUND!!!");
+					e.printStackTrace();
+					System.out.println("!!!NO ORE DICTIONARY ENTRY FOUND!!!");
+				}
+			}
 
-    @Override
-    public boolean canInteractWith(EntityPlayer playerIn)
-    {
-        return !playerIn.isDead;
-    }
+			ind++;
+		}
+	}
 
-    public static class SlotStoreTrade extends SlotItemHandler
-    {
-        public SlotStoreTrade(ItemStack display, int xPosition, int yPosition)
-        {
-            super(new ItemStackHandler(NonNullList.withSize(1, display)), 0, xPosition, yPosition);
-        }
+	public int getFinalPageNumber()
+	{
+		return trades.size() / PER_PAGE;
+	}
 
-        @Override
-        public boolean canTakeStack(EntityPlayer playerIn)
-        {
-            return false;
-        }
+	public String getStore()
+	{
+		return store;
+	}
 
-        @Override
-        public void putStack(@Nonnull ItemStack stack)
-        {
-        }
+	protected void broadcastData(IContainerListener crafting)
+	{
+		crafting.sendWindowProperty(this, 0, Trades.getStoreIndex(store));
+	}
 
-    }
+	public void addListener(IContainerListener listener)
+	{
+		super.addListener(listener);
+		this.broadcastData(listener);
+	}
 
-    public static class SlotStoreTradeCost extends SlotItemHandler
-    {
-        private Ingredient display;
-        private int ind;
-        private float time = 0;
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
 
-        public SlotStoreTradeCost(Ingredient display, int xPosition, int yPosition, Random random)
-        {
-            super(new ItemStackHandler(NonNullList.withSize(1, display.getMatchingStacks()[0])), 0, xPosition, yPosition);
-            this.display = display;
+		for(int i = 0; i < this.listeners.size(); ++i)
+		{
+			IContainerListener icontainerlistener = this.listeners.get(i);
+			this.broadcastData(icontainerlistener);
+		}
+	}
 
-            ind = random.nextInt(200) % display.getMatchingStacks().length;
-        }
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int id, int data)
+	{
+		int currentId = Trades.getStoreIndex(store);
+		if(currentId != data)
+		{
+			store = Trades.getStoreById(data);
+			trades = Trades.getTrades(player, store);
 
-        public ItemStack getStack()
-        {
-            return display.getMatchingStacks()[ind % display.getMatchingStacks().length];
-        }
+			addSlots();
 
-        public void doUpdate(float partialTicks)
-        {
-            time += partialTicks;
-            if (time > 20)
-            {
-                time = 0;
-                ind++;
-            }
-        }
+		}
 
-        @Override
-        public boolean canTakeStack(EntityPlayer playerIn)
-        {
-            return false;
-        }
+	}
 
-        @Override
-        public void putStack(@Nonnull ItemStack stack)
-        {
-        }
-    }
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn)
+	{
+		return !playerIn.isDead;
+	}
+
+	public static class SlotStoreTrade extends SlotItemHandler
+	{
+		public SlotStoreTrade(ItemStack display, int xPosition, int yPosition)
+		{
+			super(new ItemStackHandler(NonNullList.withSize(1, display)), 0, xPosition, yPosition);
+		}
+
+		@Override
+		public boolean canTakeStack(EntityPlayer playerIn)
+		{
+			return false;
+		}
+
+		@Override
+		public void putStack(@Nonnull ItemStack stack)
+		{
+		}
+
+	}
+
+	public static class SlotStoreTradeCost extends SlotItemHandler
+	{
+		private Ingredient display;
+		private int ind;
+		private float time = 0;
+
+		public SlotStoreTradeCost(Ingredient display, int xPosition, int yPosition, Random random)
+		{
+			super(new ItemStackHandler(NonNullList.withSize(1, display.getMatchingStacks()[0])), 0, xPosition, yPosition);
+			this.display = display;
+
+			ind = random.nextInt(200) % display.getMatchingStacks().length;
+		}
+
+		public ItemStack getStack()
+		{
+			return display.getMatchingStacks()[ind % display.getMatchingStacks().length];
+		}
+
+		public void doUpdate(float partialTicks)
+		{
+			time += partialTicks;
+			if(time > 20)
+			{
+				time = 0;
+				ind++;
+			}
+		}
+
+		@Override
+		public boolean canTakeStack(EntityPlayer playerIn)
+		{
+			return false;
+		}
+
+		@Override
+		public void putStack(@Nonnull ItemStack stack)
+		{
+		}
+	}
 }

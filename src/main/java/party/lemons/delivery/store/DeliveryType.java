@@ -14,18 +14,17 @@ import javax.annotation.Nonnull;
  */
 public enum DeliveryType
 {
-    SKY_DROP(new DeliveryMethodDrop()),
-    INVENTORY(new DeliveryMethodGive());
+	SKY_DROP(new DeliveryMethodDrop()), INVENTORY(new DeliveryMethodGive());
 
-    private final IDeliveryMethod method;
+	private final IDeliveryMethod method;
 
-    DeliveryType(IDeliveryMethod method)
-    {
-        this.method = method;
-    }
+	DeliveryType(IDeliveryMethod method)
+	{
+		this.method = method;
+	}
 
-    public void doDelivery(Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos)
-    {
-        method.doDelivery(trade, player, world, pos);
-    }
+	public void doDelivery(Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos)
+	{
+		method.doDelivery(trade, player, world, pos);
+	}
 }

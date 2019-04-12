@@ -17,24 +17,24 @@ import party.lemons.delivery.block.DeliveryBlocks;
 @Mod.EventBusSubscriber(modid = Delivery.MODID, value = Side.CLIENT)
 public class ItemModelHandler
 {
-    @SubscribeEvent
-    public static void onModelRegistery(ModelRegistryEvent event)
-    {
-        registerModel(DeliveryBlocks.STORE);
-        registerModel(DeliveryBlocks.CRATE);
-        registerModel(DeliveryBlocks.SHIPPING_CRATE);
+	@SubscribeEvent
+	public static void onModelRegistery(ModelRegistryEvent event)
+	{
+		registerModel(DeliveryBlocks.STORE);
+		registerModel(DeliveryBlocks.CRATE);
+		registerModel(DeliveryBlocks.SHIPPING_CRATE);
 
-        registerModel(DeliveryItems.STORE_BOOK);
-        registerModel(DeliveryItems.STORE_TECH);
-    }
+		registerModel(DeliveryItems.STORE_BOOK);
+		registerModel(DeliveryItems.STORE_TECH);
+	}
 
-    private static void registerModel(Block block)
-    {
-        registerModel(Item.getItemFromBlock(block));
-    }
+	private static void registerModel(Block block)
+	{
+		registerModel(Item.getItemFromBlock(block));
+	}
 
-    private static void registerModel(Item item)
-    {
-        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-    }
+	private static void registerModel(Item item)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	}
 }

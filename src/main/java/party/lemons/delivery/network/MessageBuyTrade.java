@@ -5,78 +5,84 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketCustomSound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import party.lemons.delivery.Delivery;
 import party.lemons.delivery.DeliveryConfig;
+import party.lemons.delivery.block.tileentity.ContainerStore;
 import party.lemons.delivery.store.Trade;
 import party.lemons.delivery.store.Trades;
-import party.lemons.delivery.block.tileentity.ContainerStore;
 
 /**
  * Created by Sam on 7/11/2018.
  */
 public class MessageBuyTrade implements IMessage
 {
-    public int index;
+	public int index;
+	public String store;
 
-    public MessageBuyTrade(){}
+	public MessageBuyTrade()
+	{
+	}
 
-    public MessageBuyTrade(int index)
-    {
-        this.index = index;
-    }
+	public MessageBuyTrade(String store, int index)
+	{
+		this.index = index;
+		this.store = store;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        this.index = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		this.index = buf.readInt();
+		this.store = ByteBufUtils.readUTF8String(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeInt(index);
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		buf.writeInt(index);
+		ByteBufUtils.writeUTF8String(buf, store);
+	}
 
-    public static class Handler implements IMessageHandler<MessageBuyTrade, IMessage>
-    {
-        @Override
-        public IMessage onMessage(final MessageBuyTrade message, final MessageContext ctx)
-        {
-            final EntityPlayerMP player = ctx.getServerHandler().player;
-            final WorldServer world = player.getServerWorld();
+	public static class Handler implements IMessageHandler<MessageBuyTrade, IMessage>
+	{
+		@Override
+		public IMessage onMessage(final MessageBuyTrade message, final MessageContext ctx)
+		{
+			final EntityPlayerMP player = ctx.getServerHandler().player;
+			final WorldServer world = player.getServerWorld();
 
-            world.addScheduledTask(() ->{
-                Trade trade = Trades.getTrades(player).get(message.index);
-                String sound = DeliveryConfig.purchaceFailSound;
+			world.addScheduledTask(()->
+			{
+				Trade trade = Trades.getTrades(player, message.store).get(message.index);
+				String sound = DeliveryConfig.purchaceFailSound;
 
-                if(player.openContainer instanceof ContainerStore && trade.canPurchase(player))
-                {
-                    trade.takeCost(player);
+				if(player.openContainer instanceof ContainerStore && trade.canPurchase(player))
+				{
+					trade.takeCost(player);
 
-                    if(DeliveryConfig.closeGui)
-                    {
-                        player.closeScreen();
-                        Delivery.NETWORK.sendTo(new MessageCloseGui(), player);
-                    }
-                    else
-                    {
-                        Delivery.NETWORK.sendTo(new MessageBuySuccess(), player);
-                    }
-                    DeliveryConfig.deliveryType.doDelivery(trade, player, world, player.getPosition());
+					if(DeliveryConfig.closeGui)
+					{
+						player.closeScreen();
+						Delivery.NETWORK.sendTo(new MessageCloseGui(), player);
+					}else
+					{
+						Delivery.NETWORK.sendTo(new MessageBuySuccess(), player);
+					}
+					DeliveryConfig.deliveryType.doDelivery(trade, player, world, player.getPosition());
 
-                    sound = DeliveryConfig.purchaceSuccessSound;
+					sound = DeliveryConfig.purchaceSuccessSound;
 
-                }
-                else
-                {
-                }
-                player.connection.sendPacket(new SPacketCustomSound(sound, SoundCategory.MASTER, player.posX, player.posY, player.posZ, 0.5F, 1F));
-            });
-            return null;
-        }
-    }
+				}else
+				{
+				}
+				player.connection.sendPacket(new SPacketCustomSound(sound, SoundCategory.MASTER, player.posX, player.posY, player.posZ, 0.5F, 1F));
+			});
+			return null;
+		}
+	}
 
 }

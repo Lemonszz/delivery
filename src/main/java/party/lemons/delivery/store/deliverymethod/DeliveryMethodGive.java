@@ -12,16 +12,15 @@ import javax.annotation.Nonnull;
  */
 public class DeliveryMethodGive implements IDeliveryMethod
 {
-    @Override
-    public void doDelivery(Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos)
-    {
-        if(!player.addItemStackToInventory(trade.result.copy()))
-        {
-            player.dropItem(trade.result.copy(), false);
-        }
-        else
-        {
-            player.inventoryContainer.detectAndSendChanges();
-        }
-    }
+	@Override
+	public void doDelivery(Trade trade, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos)
+	{
+		if(!player.addItemStackToInventory(trade.result.copy()))
+		{
+			player.dropItem(trade.result.copy(), false);
+		}else
+		{
+			player.inventoryContainer.detectAndSendChanges();
+		}
+	}
 }
