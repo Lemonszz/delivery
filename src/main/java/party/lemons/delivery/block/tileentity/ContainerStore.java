@@ -29,6 +29,7 @@ public class ContainerStore extends Container
 	private List<Trade> trades;
 	public int page = 0;
 	private String store;
+	public boolean needClientRefresh = false;
 
 	public ContainerStore(EntityPlayer player, int page, String store)
 	{
@@ -126,7 +127,7 @@ public class ContainerStore extends Container
 			trades = Trades.getTrades(player, store);
 
 			addSlots();
-
+			needClientRefresh = true;
 		}
 
 	}

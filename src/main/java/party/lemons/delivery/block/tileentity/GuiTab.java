@@ -16,15 +16,15 @@ import java.util.List;
 
 public class GuiTab extends GuiButtonExt
 {
-	private static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
-	private final ItemStack display;
-	private String store, storeId;
-	private GuiStore storeGui;
-	private boolean selected;
-	private boolean hoverPrev = false;
-	private float _targetScale = 1;
-	private float _scale = 1;
-	private float _time = 40;
+	protected static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
+	protected final ItemStack display;
+	protected String store, storeId;
+	protected GuiStore storeGui;
+	protected boolean selected;
+	protected boolean hoverPrev = false;
+	protected float _targetScale = 1;
+	protected float _scale = 1;
+	protected float _time = 40;
 
 	public GuiTab(int id, int xPos, int yPos, String store, String storeID, ItemStack display, GuiStore storeGui)
 	{
@@ -36,18 +36,21 @@ public class GuiTab extends GuiButtonExt
 		this.storeId = storeID;
 	}
 
-	public void drawButtonUnder(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+	public void drawButtonUnder(Minecraft mc, int mouseX, int mouseY , float partialTicks)
 	{
-		if(this.visible)
+		if (this.visible)
 		{
 			mc.renderEngine.bindTexture(BG);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-			if(hovered != hoverPrev) _time = 0;
+			if(hovered != hoverPrev)
+				_time = 0;
 
 			int drawX = x;
-			if(selected) drawX = x - 10;
-			else if(hovered) drawX = x - 4;
+			if(selected)
+				drawX = x - 10;
+			else if(hovered)
+				drawX = x - 4;
 
 			this.drawTexturedModalRect(drawX, this.y, 196, 21, 28, this.height);
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -57,11 +60,11 @@ public class GuiTab extends GuiButtonExt
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(drawX + 8, y + 4 + 8, 0);
 			GlStateManager.scale(currentScale, currentScale, 0);
-			GlStateManager.translate(-8, -12, 0);
+			GlStateManager.translate( -8, -12, 0);
 
 			mc.getRenderItem().renderItemAndEffectIntoGUI(display, 2, 2);
 			GlStateManager.translate(0, 0, 0);
-			GlStateManager.scale(1, 1, 1);
+			GlStateManager.scale(1,1,1);
 
 			GlStateManager.popMatrix();
 			hoverPrev = hovered;
@@ -69,7 +72,6 @@ public class GuiTab extends GuiButtonExt
 	}
 
 	private final List<String> li = new ArrayList<>();
-
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 
@@ -91,20 +93,22 @@ public class GuiTab extends GuiButtonExt
 		return false;
 	}
 
-	private float updateScale(float delta)
+	protected float updateScale(float delta)
 	{
 		if(hovered)
 		{
 			_targetScale = 0.2F;
 			_scale = 1;
-		}else
+		}
+		else
 		{
 			_targetScale = -0.2F;
 			_scale = 1.2F;
 		}
 
-		float currentScale = Elastic.easeOut(_time, _scale, _targetScale, 40);
-		if(_time < 40) _time += delta;
+		float currentScale = Elastic.easeOut(_time, _scale, _targetScale,  40);
+		if(_time < 40)
+			_time += delta;
 
 		return currentScale;
 	}
@@ -114,7 +118,8 @@ public class GuiTab extends GuiButtonExt
 		if(li.isEmpty())
 		{
 			String title = DeliveryConfig.guiTitle.isEmpty() ? I18n.format("container." + Delivery.MODID + ".store") : DeliveryConfig.guiTitle;
-			if(!store.equals("_store")) title = store;
+			if(!store.equals("_store"))
+				title = store;
 			li.add(title);
 		}
 
@@ -130,17 +135,14 @@ public class GuiTab extends GuiButtonExt
 		return storeId;
 	}
 
-	public static class Elastic
-	{
+	public static class Elastic {
 
-		public static float easeOut(float t, float b, float c, float d)
-		{
-			if(t == 0) return b;
-			if((t /= d) == 1) return b + c;
-			float p = d * .3f;
-			float a = c;
-			float s = p / 4;
-			return (a * (float) Math.pow(2, -10 * t) * (float) Math.sin((t * d - s) * (2 * (float) Math.PI) / p) + c + b);
+		public static float  easeOut(float t,float b , float c, float d) {
+			if (t==0) return b;  if ((t/=d)==1) return b+c;
+			float p=d*.3f;
+			float a=c;
+			float s=p/4;
+			return (a*(float)Math.pow(2,-10*t) * (float)Math.sin( (t*d-s)*(2*(float)Math.PI)/p ) + c + b);
 		}
 	}
 }

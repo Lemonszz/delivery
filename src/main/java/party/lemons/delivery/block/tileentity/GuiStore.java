@@ -38,6 +38,7 @@ public class GuiStore extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
+		this.buttonList.clear();
 
 		GuiButton bNext = addButton(new GuiButtonExt(0, guiLeft + (xSize - 60), guiTop + 140, 20, 20, ">"));
 		GuiButton bPrev = addButton(new GuiButtonExt(1, guiLeft + 40, guiTop + 140, 20, 20, "<"));
@@ -50,7 +51,22 @@ public class GuiStore extends GuiContainer
 		{
 			if(!store.getName().equals("_store"))
 			{
-				GuiTab t = addButton(new GuiTab(3, guiLeft - 17, 5 + guiTop + (st * 22), store.getName(), store.getName(), store.getItemStack(), this));
+				if(st <= 6)
+				{
+					GuiTab t = addButton(new GuiTab(3, guiLeft - 17, 5 + guiTop + (st * 22), store.getName(), store.getName(), store.getItemStack(), this));
+				}
+				else if(st <= 13)
+				{
+					GuiTab t = addButton(new GuiTabRight(3, (guiLeft + xSize) - 2, 5 + guiTop + ((st - 7) * 22), store.getName(), store.getName(), store.getItemStack(), this));
+				}
+				else if(st <= 20)
+				{
+					GuiTab t = addButton(new GuiTabDown(3, 12 + guiLeft + ((st - 14) * 22), guiTop + ySize - 2, store.getName(), store.getName(), store.getItemStack(), this));
+				}
+				else
+				{
+					GuiTab t = addButton(new GuiTabUp(3, 12 + guiLeft + ((st - 21) * 22), guiTop- 8, store.getName(), store.getName(), store.getItemStack(), this));
+				}
 				st++;
 			}
 		}
@@ -61,8 +77,7 @@ public class GuiStore extends GuiContainer
 			bPrev.enabled = false;
 		}
 
-		List<Trade> trades = Trades.getTrades(Minecraft.getMinecraft().player);
-
+		List<Trade> trades = Trades.getTrades(Minecraft.getMinecraft().player, store.getStore());
 		int page = DeliveryClient.LAST_PAGE;
 		int PER_PAGE = 6;
 		if(page * PER_PAGE > trades.size())
@@ -120,6 +135,12 @@ public class GuiStore extends GuiContainer
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
+		if(store.needClientRefresh)
+		{
+			initGui();
+			store.needClientRefresh = false;
+		}
+
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
