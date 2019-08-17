@@ -43,7 +43,14 @@ public class SizedOreIngredient extends Ingredient
 	public SizedOreIngredient(String ore, int size)
 	{
 		super(0);
-		ores = OreDictionary.getOres(ore);
+
+		NonNullList<ItemStack> oreDictStacks = OreDictionary.getOres(ore);
+		ores = NonNullList.withSize(oreDictStacks.size(), ItemStack.EMPTY);
+		for(int i = 0; i < oreDictStacks.size(); i++)
+		{
+			ores.set(i, oreDictStacks.get(i).copy());
+		}
+
 		for(ItemStack stack : ores)
 		{
 			stack.setCount(size);

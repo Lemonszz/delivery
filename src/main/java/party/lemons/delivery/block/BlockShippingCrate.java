@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import party.lemons.delivery.DeliveryConfig;
 import party.lemons.delivery.store.DeliveryUtil;
+import party.lemons.delivery.store.Store;
 import party.lemons.delivery.store.Trade;
 import party.lemons.delivery.store.Trades;
 
@@ -36,17 +37,20 @@ public class BlockShippingCrate extends Block
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(!stack.isEmpty())
 			{
-				for(Trade trade : Trades.getTrades(playerIn))
+				for(Store store : Trades.trades.keySet())
 				{
-					if(trade.result.isItemEqual(stack) && stack.getCount() >= trade.result.getCount())
+					for(Trade trade : Trades.getTrades(playerIn, store.getName()))
 					{
-						stack.shrink(trade.result.getCount());
+						if(trade.result.isItemEqual(stack) && stack.getCount() >= trade.result.getCount())
+						{
+							stack.shrink(trade.result.getCount());
 
-						int yPos = worldIn.getHeight() + 4;
-						DeliveryUtil.dropDeliveryCrate(trade.getCostAsInventory(), worldIn, pos.getX() + 0.5F, yPos, pos.getZ() + 0.5F);
-						((EntityPlayerMP) playerIn).connection.sendPacket(new SPacketCustomSound(DeliveryConfig.purchaceSuccessSound, SoundCategory.MASTER, playerIn.posX, playerIn.posY, playerIn.posZ, 0.5F, 1F));
+							int yPos = worldIn.getHeight() + 4;
+							DeliveryUtil.dropDeliveryCrate(trade.getCostAsInventory(), worldIn, pos.getX() + 0.5F, yPos, pos.getZ() + 0.5F);
+							((EntityPlayerMP) playerIn).connection.sendPacket(new SPacketCustomSound(DeliveryConfig.purchaceSuccessSound, SoundCategory.MASTER, playerIn.posX, playerIn.posY, playerIn.posZ, 0.5F, 1F));
 
-						return true;
+							return true;
+						}
 					}
 				}
 			}

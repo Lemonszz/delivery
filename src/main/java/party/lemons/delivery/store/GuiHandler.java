@@ -19,13 +19,13 @@ public class GuiHandler implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return new ContainerStore(player, ID, MessageOpenStore.playerStoreMap.get(player.getName()));
+		return new ContainerStore(player, ID, Trades.getStoreById(x));
 	}
 
 	@Nullable
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return new GuiStore(new ContainerStore(player, ID, "_store"));
+		return new GuiStore(new ContainerStore(player, ID, Trades.getStoreById(x)));
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import party.lemons.delivery.Delivery;
 import party.lemons.delivery.DeliveryConfig;
+import party.lemons.delivery.store.Trades;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,13 +72,11 @@ public class MessageOpenStore implements IMessage
 
 				if(dimOk && (!message.keybind || (message.keybind && DeliveryConfig.useKey)))
 				{
-					playerStoreMap.put(player.getName(), message.store);
-					player.openGui(Delivery.INSTANCE, message.page, world, 0, 0, 0);
+					int storeID = Trades.getStoreIndex(message.store);
+					player.openGui(Delivery.INSTANCE, message.page, world, storeID, 0, 0);
 				}
 			});
 			return null;
 		}
 	}
-
-	public static Map<String, String> playerStoreMap = new HashMap<>();
 }

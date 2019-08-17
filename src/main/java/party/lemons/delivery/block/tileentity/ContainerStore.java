@@ -1,8 +1,11 @@
 package party.lemons.delivery.block.tileentity;
 
+import com.blamejared.ctgui.api.SlotRecipeOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -45,7 +48,6 @@ public class ContainerStore extends Container
 	{
 		this.inventorySlots.clear();
 		this.inventoryItemStacks.clear();
-
 
 		if(page * PER_PAGE > trades.size())
 		{
