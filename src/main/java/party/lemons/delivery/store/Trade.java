@@ -47,7 +47,6 @@ public class Trade
 		return addIngredient(Trades.getMergedIngredient(stacks));
 	}
 
-	@ZenMethod
 	public Trade addIngredient(Ingredient ingredient)
 	{
 		int ind = cost.length;
