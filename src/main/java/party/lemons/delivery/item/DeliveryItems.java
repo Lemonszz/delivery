@@ -1,6 +1,7 @@
 package party.lemons.delivery.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -28,8 +29,8 @@ public class DeliveryItems
 		event.getRegistry().register(createItemBlock(DeliveryBlocks.CRATE));
 		event.getRegistry().register(createItemBlock(DeliveryBlocks.SHIPPING_CRATE));
 
-		event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_book").setRegistryName(Delivery.MODID, "store_book"));
-		event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_tech").setRegistryName(Delivery.MODID, "store_tech"));
+		event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_book").setCreativeTab(CreativeTabs.MISC).setRegistryName(Delivery.MODID, "store_book"));
+		event.getRegistry().register(new ItemStore().setTranslationKey(Delivery.MODID + ".store_tech").setCreativeTab(CreativeTabs.MISC).setRegistryName(Delivery.MODID, "store_tech"));
 	}
 
 	private static ItemBlock createItemBlock(Block block)

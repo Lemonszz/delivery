@@ -19,6 +19,7 @@ import party.lemons.delivery.store.Trades;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sam on 5/11/2018.
@@ -44,10 +45,11 @@ public class GuiStore extends GuiContainer
 		GuiButton bPrev = addButton(new GuiButtonExt(1, guiLeft + 40, guiTop + 140, 20, 20, "<"));
 
 		int st = 1;
-		Store def = Trades.getStore("_store");
+		Store def = Trades.getStore("_store", store.getProfile());
 		Gui tab = addButton(new GuiTab(3, guiLeft - 17, 5 + guiTop + (0 * 22), def.getName(), def.getName(), def.getItemStack(), this));
 
-		for(Store store : Trades.trades.keySet())
+		Map<Store, List<Trade>> tr = Trades.trades.get(store.getProfile());
+		for(Store store : tr.keySet())
 		{
 			if(!store.getName().equals("_store"))
 			{
@@ -77,7 +79,7 @@ public class GuiStore extends GuiContainer
 			bPrev.enabled = false;
 		}
 
-		List<Trade> trades = Trades.getTrades(Minecraft.getMinecraft().player, store.getStore());
+		List<Trade> trades = Trades.getTrades(Minecraft.getMinecraft().player, store.getStore(), store.getProfile());
 		int page = DeliveryClient.LAST_PAGE;
 		int PER_PAGE = 6;
 		if(page * PER_PAGE > trades.size())
@@ -114,18 +116,18 @@ public class GuiStore extends GuiContainer
 				DeliveryClient.LAST_PAGE++;
 				if(DeliveryClient.LAST_PAGE > store.getFinalPageNumber()) DeliveryClient.LAST_PAGE = 0;
 
-				DeliveryClient.sendStoreMessage(false);
+				DeliveryClient.sendStoreMessage(store.getProfile(), false);
 				break;
 			case 1:
 				DeliveryClient.LAST_PAGE--;
 				if(DeliveryClient.LAST_PAGE < 0) DeliveryClient.LAST_PAGE = store.getFinalPageNumber();
 
-				DeliveryClient.sendStoreMessage(false);
+				DeliveryClient.sendStoreMessage(store.getProfile(), false);
 				break;
 			case 3:
 				break;
 			case 2:
-				Delivery.NETWORK.sendToServer(new MessageBuyTrade(store.getStore(), ((ConfirmButton) button).storeIndex));
+				Delivery.NETWORK.sendToServer(new MessageBuyTrade(store.getStore(), store.getProfile(), ((ConfirmButton) button).storeIndex));
 				lastButton = (ConfirmButton) button;
 				break;
 		}
@@ -178,18 +180,18 @@ public class GuiStore extends GuiContainer
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 
-	private static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
+	public static ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
 
 	public void setButtonDisabled()
 	{
 		if(lastButton != null) lastButton.setDisabled();
 	}
 
-	public void storeTabClick(String store)
+	public void storeTabClick(String st)
 	{
 		DeliveryClient.LAST_PAGE = 0;
-		DeliveryClient.LAST_STORE = store;
-		DeliveryClient.sendStoreMessage(false);
+		DeliveryClient.LAST_STORE = st;
+		DeliveryClient.sendStoreMessage(store.getProfile(),false);
 	}
 
 	static class Button extends GuiButton

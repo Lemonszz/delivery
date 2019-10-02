@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import party.lemons.delivery.network.MessageOpenStore;
 import party.lemons.delivery.proxy.ClientProxy;
+import party.lemons.delivery.store.Trades;
 
 /**
  * Created by Sam on 7/11/2018.
@@ -20,15 +21,23 @@ public class DeliveryClient
 
 		if(ClientProxy.KEY_STORE.isPressed())
 		{
-			sendStoreMessage(true);
+			sendStoreMessage(Trades.DEFAULT_PROFILE, true);
 		}
 	}
 
 	public static int LAST_PAGE = 0;
 	public static String LAST_STORE = "_store";
+	public static String LAST_PROFILE = "_default";
 
-	public static void sendStoreMessage(boolean keybind)
+	public static void sendStoreMessage(String profile, boolean keybind)
 	{
-		Delivery.NETWORK.sendToServer(new MessageOpenStore(LAST_PAGE, LAST_STORE, keybind));
+		if(profile != LAST_PROFILE)
+		{
+			LAST_PAGE = 0;
+			LAST_STORE = Trades.DEFAULT_STORE;
+			LAST_PROFILE = profile;
+		}
+
+		Delivery.NETWORK.sendToServer(new MessageOpenStore(LAST_PAGE, LAST_STORE, profile, keybind));
 	}
 }

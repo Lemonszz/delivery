@@ -21,12 +21,23 @@ import java.util.stream.Collectors;
 @ZenClass("mods.Delivery.Store")
 public class Trades
 {
-	public static Map<Store, List<Trade>> trades = new LinkedHashMap<>();
+	public static final String DEFAULT_STORE = "_store";
+	public static final String DEFAULT_PROFILE = "_default";
+
+
+	public static Map<String, Map<Store, List<Trade>>> trades = new LinkedHashMap<>();
+	private static String profile = "_default";
 
 	@ZenMethod
 	public static void clear()
 	{
 		trades.clear();
+	}
+
+	@ZenMethod
+	public static void setProfile(String profile)
+	{
+		Trades.profile = profile;
 	}
 
 	@ZenMethod
@@ -84,13 +95,19 @@ public class Trades
 			storeName = "_store";
 		}
 
-		if(!trades.containsKey(getStore(storeName)))
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
+
+		if(!profileTrades.containsKey(getStore(storeName, profile)))
 		{
 			Store s = new Store(storeName);
-			trades.put(s, new ArrayList<>());
+			profileTrades.put(s, new ArrayList<>());
 		}
 
-		trades.get(getStore(storeName)).add(trade);
+		profileTrades.get(getStore(storeName, profile)).add(trade);
 
 		return trade;
 	}
@@ -98,13 +115,19 @@ public class Trades
 	@ZenMethod
 	public static void setStoreIcon(String storeName, IItemStack storeIcon)
 	{
-		if(!trades.containsKey(getStore(storeName)))
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
+
+		if(!profileTrades.containsKey(getStore(storeName, profile)))
 		{
 			Store s = new Store(storeName);
-			trades.put(s, new ArrayList<>());
+			profileTrades.put(s, new ArrayList<>());
 		}
 
-		Store s = getStore(storeName);
+		Store s = getStore(storeName, profile);
 		s.setItemStack(CraftTweakerMC.getItemStack(storeIcon));
 	}
 
@@ -130,14 +153,15 @@ public class Trades
 		return Ingredient.fromStacks(items);
 	}
 
-	public static List<Trade> getTrades(EntityPlayer player)
+	public static List<Trade> getTrades(EntityPlayer player, String store, String profile)
 	{
-		return getTrades(player, "_store");
-	}
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
 
-	public static List<Trade> getTrades(EntityPlayer player, String store)
-	{
-		List<Trade> entries = trades.get(getStore(store));
+		List<Trade> entries = profileTrades.get(getStore(store, profile));
 		if(entries == null)
 		{
 			return Collections.emptyList();
@@ -146,9 +170,16 @@ public class Trades
 		return entries.stream().filter(t->t.isUnlocked(player)).collect(Collectors.toList());
 	}
 
-	public static Store getStore(String name)
+	public static Store getStore(String name, String profile)
 	{
-		for(Store store : trades.keySet())
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
+
+		for(Store store : profileTrades.keySet())
 		{
 			if(store.getName().equalsIgnoreCase(name)) return store;
 		}
@@ -156,10 +187,17 @@ public class Trades
 		return null;
 	}
 
-	public static int getStoreIndex(String store)
+	public static int getStoreIndex(String store, String profile)
 	{
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
+
 		int i = 0;
-		for(Store s : trades.keySet())
+		for(Store s : profileTrades.keySet())
 		{
 			if(s.getName().equalsIgnoreCase(store)) return i;
 
@@ -169,17 +207,49 @@ public class Trades
 		return -1;
 	}
 
-	public static String getStoreById(int data)
+	public static String getStoreById(int data, String profile)
 	{
+		if(!trades.containsKey(profile))
+		{
+			trades.put(profile, new LinkedHashMap<>());
+		}
+		Map<Store, List<Trade>> profileTrades = trades.get(profile);
+
 		int i = 0;
-		for(Store s : trades.keySet())
+		for(Store s : profileTrades.keySet())
 		{
 			if(i == data) return s.getName();
 
 			i++;
 		}
 
-		return "_store";
+		return DEFAULT_STORE;
+	}
+
+	public static String getProfileById(int data)
+	{
+		int i = 0;
+		for(String s : trades.keySet())
+		{
+			if(i == data)
+				return s;
+			i++;
+		}
+
+		return DEFAULT_PROFILE;
+	}
+
+	public static int getProfileIndex(String profile)
+	{
+		int i = 0;
+		for(String s : trades.keySet())
+		{
+			if(s.equalsIgnoreCase(profile)) return i;
+
+			i++;
+		}
+
+		return -1;
 	}
 
 	public static int transformStoreIndex(int index)

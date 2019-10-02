@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.12.2-1.5.2"
+version = "1.12.2-1.6.2"
 group = "party.lemons"
 archivesBaseName = "delivery"
 
@@ -37,6 +37,17 @@ dependencies {
     compile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.6"
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+
+artifacts {
+    archives sourceJar
+    archives deobfJar
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -49,5 +60,14 @@ processResources {
         
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
+                'Timestamp'     : System.currentTimeMillis()
+        ])
     }
 }
