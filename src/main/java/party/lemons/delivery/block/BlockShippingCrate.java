@@ -37,9 +37,9 @@ public class BlockShippingCrate extends Block
 			ItemStack stack = playerIn.getHeldItem(hand);
 			if(!stack.isEmpty())
 			{
-				for(Store store : Trades.trades.keySet())
+				for(Store store : Trades.trades.get(Trades.DEFAULT_PROFILE).keySet())
 				{
-					for(Trade trade : Trades.getTrades(playerIn, store.getName()))
+					for(Trade trade : Trades.getTrades(playerIn, store.getName(), Trades.DEFAULT_PROFILE))
 					{
 						if(trade.result.isItemEqual(stack) && stack.getCount() >= trade.result.getCount())
 						{

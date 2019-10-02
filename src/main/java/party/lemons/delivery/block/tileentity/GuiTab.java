@@ -16,7 +16,6 @@ import java.util.List;
 
 public class GuiTab extends GuiButtonExt
 {
-	protected static final ResourceLocation BG = new ResourceLocation(Delivery.MODID, "textures/store.png");
 	protected final ItemStack display;
 	protected String store, storeId;
 	protected GuiStore storeGui;
@@ -40,7 +39,7 @@ public class GuiTab extends GuiButtonExt
 	{
 		if (this.visible)
 		{
-			mc.renderEngine.bindTexture(BG);
+			mc.renderEngine.bindTexture(GuiStore.BG);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			if(hovered != hoverPrev)

@@ -10,6 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import party.lemons.delivery.DeliveryClient;
+import party.lemons.delivery.store.Trades;
 
 /**
  * Created by Sam on 7/11/2018.
@@ -26,7 +27,7 @@ public class BlockStore extends Block
 	{
 		if(worldIn.isRemote)
 		{
-			DeliveryClient.sendStoreMessage(false);
+			DeliveryClient.sendStoreMessage(Trades.DEFAULT_PROFILE,false);
 			return true;
 		}
 

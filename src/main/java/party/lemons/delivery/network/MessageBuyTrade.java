@@ -22,15 +22,17 @@ public class MessageBuyTrade implements IMessage
 {
 	public int index;
 	public String store;
+	public String profile;
 
 	public MessageBuyTrade()
 	{
 	}
 
-	public MessageBuyTrade(String store, int index)
+	public MessageBuyTrade(String store, String profile, int index)
 	{
 		this.index = index;
 		this.store = store;
+		this.profile = profile;
 	}
 
 	@Override
@@ -38,6 +40,7 @@ public class MessageBuyTrade implements IMessage
 	{
 		this.index = buf.readInt();
 		this.store = ByteBufUtils.readUTF8String(buf);
+		this.profile = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
@@ -45,6 +48,7 @@ public class MessageBuyTrade implements IMessage
 	{
 		buf.writeInt(index);
 		ByteBufUtils.writeUTF8String(buf, store);
+		ByteBufUtils.writeUTF8String(buf, profile);
 	}
 
 	public static class Handler implements IMessageHandler<MessageBuyTrade, IMessage>
@@ -57,7 +61,7 @@ public class MessageBuyTrade implements IMessage
 
 			world.addScheduledTask(()->
 			{
-				Trade trade = Trades.getTrades(player, message.store).get(message.index);
+				Trade trade = Trades.getTrades(player, message.store, message.profile).get(message.index);
 				String sound = DeliveryConfig.purchaceFailSound;
 
 				if(player.openContainer instanceof ContainerStore && trade.canPurchase(player))

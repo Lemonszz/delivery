@@ -22,16 +22,18 @@ public class MessageOpenStore implements IMessage
 	public int page;
 	public boolean keybind;
 	public String store;
+	public String profile;
 
 	public MessageOpenStore()
 	{
 	}
 
-	public MessageOpenStore(int page, String store, boolean keybind)
+	public MessageOpenStore(int page, String store, String profile, boolean keybind)
 	{
 		this.page = page;
 		this.keybind = keybind;
 		this.store = store;
+		this.profile = profile;
 	}
 
 	@Override
@@ -40,6 +42,7 @@ public class MessageOpenStore implements IMessage
 		this.page = buf.readInt();
 		this.keybind = buf.readBoolean();
 		this.store = ByteBufUtils.readUTF8String(buf);
+		this.profile = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
@@ -48,6 +51,7 @@ public class MessageOpenStore implements IMessage
 		buf.writeInt(page);
 		buf.writeBoolean(keybind);
 		ByteBufUtils.writeUTF8String(buf, store);
+		ByteBufUtils.writeUTF8String(buf, profile);
 	}
 
 	public static class Handler implements IMessageHandler<MessageOpenStore, IMessage>
@@ -72,8 +76,8 @@ public class MessageOpenStore implements IMessage
 
 				if(dimOk && (!message.keybind || (message.keybind && DeliveryConfig.useKey)))
 				{
-					int storeID = Trades.getStoreIndex(message.store);
-					player.openGui(Delivery.INSTANCE, message.page, world, storeID, 0, 0);
+					int storeID = Trades.getStoreIndex(message.store, message.profile);
+					player.openGui(Delivery.INSTANCE, message.page, world, storeID, Trades.getProfileIndex(message.profile), 0);
 				}
 			});
 			return null;

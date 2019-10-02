@@ -32,15 +32,17 @@ public class ContainerStore extends Container
 	private List<Trade> trades;
 	public int page = 0;
 	private String store;
+	private String profile;
 	public boolean needClientRefresh = false;
 
-	public ContainerStore(EntityPlayer player, int page, String store)
+	public ContainerStore(EntityPlayer player, int page, String store, String profile)
 	{
 		this.page = page;
 		this.store = store;
 		this.player = player;
+		this.profile = profile;
 
-		trades = Trades.getTrades(player, store);
+		trades = Trades.getTrades(player, store, profile);
 		addSlots();
 	}
 
@@ -99,7 +101,7 @@ public class ContainerStore extends Container
 
 	protected void broadcastData(IContainerListener crafting)
 	{
-		crafting.sendWindowProperty(this, 0, Trades.getStoreIndex(store));
+		crafting.sendWindowProperty(this, 0, Trades.getStoreIndex(store, profile));
 	}
 
 	public void addListener(IContainerListener listener)
@@ -122,11 +124,11 @@ public class ContainerStore extends Container
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int data)
 	{
-		int currentId = Trades.getStoreIndex(store);
+		int currentId = Trades.getStoreIndex(store, profile);
 		if(currentId != data)
 		{
-			store = Trades.getStoreById(data);
-			trades = Trades.getTrades(player, store);
+			store = Trades.getStoreById(data, profile);
+			trades = Trades.getTrades(player, store, profile);
 
 			addSlots();
 			needClientRefresh = true;
@@ -138,6 +140,11 @@ public class ContainerStore extends Container
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
 		return !playerIn.isDead;
+	}
+
+	public String getProfile()
+	{
+		return profile;
 	}
 
 	public static class SlotStoreTrade extends SlotItemHandler

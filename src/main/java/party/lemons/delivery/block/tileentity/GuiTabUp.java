@@ -15,7 +15,7 @@ public class GuiTabUp extends GuiTab
 	{
 		if (this.visible)
 		{
-			mc.renderEngine.bindTexture(BG);
+			mc.renderEngine.bindTexture(GuiStore.BG);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			if(hovered != hoverPrev)
